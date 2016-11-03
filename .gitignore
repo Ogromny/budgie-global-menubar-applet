@@ -1,0 +1,25 @@
+Makefile
+Makefile.in
+aclocal.m4
+autom4te.cache/
+compile
+config.*
+configure
+install-sh
+libtool
+ltmain.sh
+m4/
+missing
+
+# libtool
+.deps/
+.libs/
+depcomp
+*.la
+*.lo
+*.o
+
+*.dirstamp
+
+# Current binary for testing
+testing-applet
