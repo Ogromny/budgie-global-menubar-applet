@@ -42,6 +42,8 @@ int main(int argc, char **argv)
                 "Window path: %s\nWindow bus: %s\n",
                 window_menu->bus_path,
                 window_menu->bus_id);
+
+        fprintf(stdout, "Menu has %d entries\n", g_menu_model_get_n_items(window_menu->bus_model));
 finish:
         g_clear_pointer(&window_menu, free_window_menu);
         return ret;

@@ -105,6 +105,7 @@ gchar *query_window_gtk_bus_name(gulong xid)
 WindowMenu *query_window_menu(gulong xid)
 {
         WindowMenu *ret = NULL;
+        GError *error = NULL;
 
         ret = g_new0(WindowMenu, 1);
         ret->xid = xid;
@@ -124,10 +125,24 @@ WindowMenu *query_window_menu(gulong xid)
                 goto failed_query;
         }
 
-        /* TODO: Actually create the bus connection + menu model */
+        /* Hook up dbus and grab the dbus menu */
+        ret->bus = g_bus_get_sync(G_BUS_TYPE_SESSION, NULL, &error);
+        if (!ret->bus) {
+                goto failed_query;
+        }
+        ret->bus_model = g_dbus_menu_model_get(ret->bus, ret->bus_id, ret->bus_path);
+        if (!ret->bus_model) {
+                goto failed_query;
+        }
+
         return ret;
 
 failed_query:
+        if (error) {
+                g_printerr("Error on dbus: %s\n", error->message);
+                g_error_free(error);
+        }
+
         g_clear_pointer(&ret, free_window_menu);
         return NULL;
 }
@@ -140,6 +155,7 @@ void free_window_menu(WindowMenu *menu)
         g_clear_pointer(&menu->bus_path, g_free);
         g_clear_pointer(&menu->bus_id, g_free);
         g_clear_object(&menu->bus_model);
+        g_clear_object(&menu->bus);
         g_free(menu);
 }
 

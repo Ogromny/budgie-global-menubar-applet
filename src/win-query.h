@@ -22,6 +22,7 @@ typedef struct WindowMenu {
         gchar *bus_path;
         gchar *bus_id;
         GMenuModel *bus_model;
+        GDBusConnection *bus;
 } WindowMenu;
 
 /**
