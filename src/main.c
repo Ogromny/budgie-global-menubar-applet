@@ -31,7 +31,7 @@ int main(int argc, char **argv)
         }
         const char *xwind = argv[1];
         gulong id = g_ascii_strtoull(xwind, NULL, 10);
-        id = 0x2c00008;
+        // id = 0x2c00008;
 
         window_menu = query_window_menu(id);
         if (!window_menu) {
