@@ -11,6 +11,7 @@ xsettings portion
     Gtk/ShellShowsMenubar <1>
 
 **Disable module**
+
     Gtk/ShellShowsMenubar <0>
 
 
