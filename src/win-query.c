@@ -113,9 +113,12 @@ WindowMenu *query_window_menu(gulong xid)
         /* Attempt to gain the bus path first */
         ret->bus_path = query_window_menu_object_path(xid);
         if (!ret->bus_path) {
-                ret->bus_path = query_window_menu_action_group(xid);
+                goto failed_query;
         }
-        if (!ret->bus_path) {
+
+        /* Now get the action group */
+        ret->bus_group_path = query_window_menu_action_group(xid);
+        if (!ret->bus_group_path) {
                 goto failed_query;
         }
 
