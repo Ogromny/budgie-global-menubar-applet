@@ -25,6 +25,7 @@
 
 static GdkAtom _menu_atom;
 static GdkAtom _menu_atom_legacy;
+static GdkAtom _utf8_atom;
 static gboolean had_init = FALSE;
 
 /**
@@ -37,16 +38,43 @@ static void init_atoms(void)
         }
         _menu_atom = gdk_atom_intern(MENUBAR_OBJECT_PATH, FALSE);
         _menu_atom_legacy = gdk_atom_intern(LEGACY_MENUBAR_OBJECT_PATH, FALSE);
+        _utf8_atom = gdk_atom_intern("UTF8_STRING", FALSE);
         had_init = TRUE;
 }
 
 /**
- * Do the real work
+ * Do the real work and query the window using the given atom.
+ * Essentially we only care about a UTF8_STRING window property of one of
+ * the given paths.
  */
 static gchar *query_xwindow_internal(gulong xid, GdkAtom *atom)
 {
         init_atoms();
-        return NULL;
+        guchar *data = NULL;
+        GdkDisplay *display = NULL;
+        GdkWindow *foreign_window = NULL;
+        GdkAtom actual_type;
+        gint a_af = 0, a_al = 0;
+
+        display = gdk_display_get_default();
+        foreign_window = gdk_x11_window_foreign_new_for_display(display, xid);
+        if (!foreign_window) {
+                fprintf(stderr, "Cannot find window on display %lu\n", xid);
+                return NULL;
+        }
+
+        gdk_property_get(foreign_window,
+                         *atom,
+                         _utf8_atom,
+                         0,
+                         G_MAXLONG,
+                         0,
+                         &actual_type,
+                         &a_af,
+                         &a_al,
+                         &data);
+        /* May well be NULL */
+        return (gchar *)data;
 }
 
 gchar *query_window_menu_object_path(gulong xid)

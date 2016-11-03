@@ -12,11 +12,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <gtk/gtk.h>
+
 #include "win-query.h"
 
 int main(int argc, char **argv)
 {
         int ret = EXIT_SUCCESS;
+
+        gtk_init(&argc, &argv);
 
         if (argc < 2) {
                 fprintf(stderr, "Provide a window id\n");
