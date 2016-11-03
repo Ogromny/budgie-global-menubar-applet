@@ -23,6 +23,11 @@ gchar *query_window_menu_object_path(gulong xid);
  */
 gchar *query_window_menu_object_path_legacy(gulong xid);
 
+/**
+ * Return the unique bus name for the given app
+ */
+gchar *query_window_gtk_bus_name(gulong xid);
+
 /*
  * Editor modelines  -  https://www.wireshark.org/tools/modelines.html
  *

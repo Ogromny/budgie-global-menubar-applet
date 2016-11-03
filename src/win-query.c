@@ -23,9 +23,15 @@
  */
 #define LEGACY_MENUBAR_OBJECT_PATH "_UNITY_OBJECT_PATH"
 
+/**
+ * The bus name to connect to
+ */
+#define UNIQUE_BUS_NAME "_GTK_UNIQUE_BUS_NAME"
+
 static GdkAtom _menu_atom;
 static GdkAtom _menu_atom_legacy;
 static GdkAtom _utf8_atom;
+static GdkAtom _gtk_bus_atom;
 static gboolean had_init = FALSE;
 
 /**
@@ -38,6 +44,7 @@ static inline void init_atoms(void)
         }
         _menu_atom = gdk_atom_intern(MENUBAR_OBJECT_PATH, FALSE);
         _menu_atom_legacy = gdk_atom_intern(LEGACY_MENUBAR_OBJECT_PATH, FALSE);
+        _gtk_bus_atom = gdk_atom_intern(UNIQUE_BUS_NAME, FALSE);
         _utf8_atom = gdk_atom_intern("UTF8_STRING", FALSE);
         had_init = TRUE;
 }
@@ -85,6 +92,11 @@ gchar *query_window_menu_object_path(gulong xid)
 gchar *query_window_menu_object_path_legacy(gulong xid)
 {
         return query_xwindow_internal(xid, &_menu_atom_legacy);
+}
+
+gchar *query_window_gtk_bus_name(gulong xid)
+{
+        return query_xwindow_internal(xid, &_gtk_bus_atom);
 }
 
 /*
