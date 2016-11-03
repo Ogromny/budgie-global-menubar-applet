@@ -99,6 +99,50 @@ gchar *query_window_gtk_bus_name(gulong xid)
         return query_xwindow_internal(xid, &_gtk_bus_atom);
 }
 
+/**
+ * Don't actually do anything atm...
+ */
+WindowMenu *query_window_menu(gulong xid)
+{
+        WindowMenu *ret = NULL;
+
+        ret = g_new0(WindowMenu, 1);
+        ret->xid = xid;
+
+        /* Attempt to gain the bus path first */
+        ret->bus_path = query_window_menu_object_path(xid);
+        if (!ret->bus_path) {
+                ret->bus_path = query_window_menu_object_path_legacy(xid);
+        }
+        if (!ret->bus_path) {
+                goto failed_query;
+        }
+
+        /* Get the bus id */
+        ret->bus_id = query_window_gtk_bus_name(xid);
+        if (!ret->bus_id) {
+                goto failed_query;
+        }
+
+        /* TODO: Actually create the bus connection + menu model */
+        return ret;
+
+failed_query:
+        g_clear_pointer(&ret, free_window_menu);
+        return NULL;
+}
+
+void free_window_menu(WindowMenu *menu)
+{
+        if (!menu) {
+                return;
+        }
+        g_clear_pointer(&menu->bus_path, g_free);
+        g_clear_pointer(&menu->bus_id, g_free);
+        g_clear_object(&menu->bus_model);
+        g_free(menu);
+}
+
 /*
  * Editor modelines  -  https://www.wireshark.org/tools/modelines.html
  *

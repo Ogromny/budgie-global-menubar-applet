@@ -11,7 +11,18 @@
 
 #pragma once
 
+#include <gio/gio.h>
 #include <glib.h>
+
+/**
+ * Used to track dbus menus
+ */
+typedef struct WindowMenu {
+        gulong xid;
+        gchar *bus_path;
+        gchar *bus_id;
+        GMenuModel *bus_model;
+} WindowMenu;
 
 /**
  * Return the dbus menu path for a given window
@@ -24,9 +35,20 @@ gchar *query_window_menu_object_path(gulong xid);
 gchar *query_window_menu_object_path_legacy(gulong xid);
 
 /**
- * Return the unique bus name for the given app
+ * Create a new WindowMenu from the given xid.
+ * This may fail and return NULL if the window does not export
+ * a menu.
  */
-gchar *query_window_gtk_bus_name(gulong xid);
+WindowMenu *query_window_menu(gulong xid);
+
+/**
+ * Free an existing window menu
+ */
+void free_window_menu(WindowMenu *menu);
+
+/**
+ * Return a GMenuModel for the given bus and path
+GMenuModel *query_window_menu(gulong xid);
 
 /*
  * Editor modelines  -  https://www.wireshark.org/tools/modelines.html

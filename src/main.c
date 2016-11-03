@@ -19,6 +19,7 @@
 int main(int argc, char **argv)
 {
         int ret = EXIT_SUCCESS;
+        WindowMenu *window_menu = NULL;
 
         gtk_init(&argc, &argv);
 
@@ -28,25 +29,21 @@ int main(int argc, char **argv)
         }
         const char *xwind = argv[1];
         gulong id = g_ascii_strtoull(xwind, NULL, 10);
+        // id = 0x2c00008;
 
-        gchar *tmp = query_window_menu_object_path(id);
-        if (tmp) {
-                fprintf(stderr, "Got ID: %s\n", tmp);
-                goto finish;
-        }
-        tmp = query_window_menu_object_path_legacy(id);
-        if (tmp) {
-                fprintf(stderr, "Got legacy ID: %s\n", tmp);
+        window_menu = query_window_menu(id);
+        if (!window_menu) {
+                fprintf(stderr, "No ID found for: %lu\n", id);
+                ret = EXIT_FAILURE;
                 goto finish;
         }
 
-        ret = EXIT_FAILURE;
-        fprintf(stderr, "No ID found for: %lu\n", id);
+        fprintf(stdout,
+                "Window path: %s\nWindow bus: %s\n",
+                window_menu->bus_path,
+                window_menu->bus_id);
 finish:
-
-        if (tmp) {
-                free(tmp);
-        }
+        g_clear_pointer(&window_menu, free_window_menu);
         return ret;
 }
 
