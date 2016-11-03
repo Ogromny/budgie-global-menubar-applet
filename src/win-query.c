@@ -31,7 +31,7 @@ static gboolean had_init = FALSE;
 /**
  * Initialise the xatoms for the first time
  */
-static void init_atoms(void)
+static inline void init_atoms(void)
 {
         if (had_init) {
                 return;
