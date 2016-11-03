@@ -1,7 +1,11 @@
 budgie-global-menubar-applet
 ============================
 
-A Global Menubar Applet for the Budgie Desktop
+A Global Menubar Applet for the Budgie Desktop.
+
+This is still very much WIP and in the research stage. Don't be silly and
+fork it. Don't try installing it, it doesn't do anything useful yet.
+Just have patience :)
 
 budgie-global-menubar-applet is a [Solus project](https://solus-project.com/).
 
