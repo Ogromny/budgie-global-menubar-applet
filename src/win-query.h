@@ -20,9 +20,11 @@
 typedef struct WindowMenu {
         gulong xid;
         gchar *bus_path;
+        gchar *bus_group_path;
         gchar *bus_id;
         GMenuModel *bus_model;
         GDBusConnection *bus;
+        GDBusActionGroup *bus_group;
 } WindowMenu;
 
 /**
@@ -33,7 +35,7 @@ gchar *query_window_menu_object_path(gulong xid);
 /**
  * Return the legacy dbus menu path for a given window.
  */
-gchar *query_window_menu_object_path_legacy(gulong xid);
+gchar *query_window_menu_action_group(gulong xid);
 
 /**
  * Create a new WindowMenu from the given xid.

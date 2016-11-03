@@ -21,7 +21,7 @@
 /**
  * Old pre-upstreaming export path
  */
-#define LEGACY_MENUBAR_OBJECT_PATH "_UNITY_OBJECT_PATH"
+#define ACTION_GROUP_OBJECT_PATH "_UNITY_OBJECT_PATH"
 
 /**
  * The bus name to connect to
@@ -43,7 +43,7 @@ static inline void init_atoms(void)
                 return;
         }
         _menu_atom = gdk_atom_intern(MENUBAR_OBJECT_PATH, FALSE);
-        _menu_atom_legacy = gdk_atom_intern(LEGACY_MENUBAR_OBJECT_PATH, FALSE);
+        _menu_atom_legacy = gdk_atom_intern(ACTION_GROUP_OBJECT_PATH, FALSE);
         _gtk_bus_atom = gdk_atom_intern(UNIQUE_BUS_NAME, FALSE);
         _utf8_atom = gdk_atom_intern("UTF8_STRING", FALSE);
         had_init = TRUE;
@@ -89,7 +89,7 @@ gchar *query_window_menu_object_path(gulong xid)
         return query_xwindow_internal(xid, &_menu_atom);
 }
 
-gchar *query_window_menu_object_path_legacy(gulong xid)
+gchar *query_window_menu_action_group(gulong xid)
 {
         return query_xwindow_internal(xid, &_menu_atom_legacy);
 }
@@ -113,7 +113,7 @@ WindowMenu *query_window_menu(gulong xid)
         /* Attempt to gain the bus path first */
         ret->bus_path = query_window_menu_object_path(xid);
         if (!ret->bus_path) {
-                ret->bus_path = query_window_menu_object_path_legacy(xid);
+                ret->bus_path = query_window_menu_action_group(xid);
         }
         if (!ret->bus_path) {
                 goto failed_query;
@@ -135,6 +135,11 @@ WindowMenu *query_window_menu(gulong xid)
                 goto failed_query;
         }
 
+        /* Grab the action group for the menu */
+        ret->bus_group = g_dbus_action_group_get(ret->bus, ret->bus_id, ret->bus_group_path);
+        if (!ret->bus_group) {
+                goto failed_query;
+        }
         return ret;
 
 failed_query:
@@ -154,8 +159,10 @@ void free_window_menu(WindowMenu *menu)
         }
         g_clear_pointer(&menu->bus_path, g_free);
         g_clear_pointer(&menu->bus_id, g_free);
+        g_clear_pointer(&menu->bus_group_path, g_free);
         g_clear_object(&menu->bus_model);
         g_clear_object(&menu->bus);
+        g_clear_object(&menu->bus_group);
         g_free(menu);
 }
 
