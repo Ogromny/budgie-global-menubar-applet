@@ -16,7 +16,9 @@ noinst_PROGRAMS = \
 	testing-applet
 
 testing_applet_SOURCES = \
-	src/main.c
+	src/main.c \
+	src/win-query.h \
+	src/win-query.c
 
 testing_applet_CFLAGS = \
 	$(GTK_CFLAGS) \
