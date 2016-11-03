@@ -11,20 +11,52 @@
 
 #include "win-query.h"
 
+#include <gdk/gdkx.h>
+
 /**
- * Return the dbus menu path for a given window
+ * Current unity-gtk-greeter export path
  */
-gchar *query_window_menu_object_path(gulong xid)
+#define MENUBAR_OBJECT_PATH "_GTK_MENUBAR_OBJECT_PATH"
+
+/**
+ * Old pre-upstreaming export path
+ */
+#define LEGACY_MENUBAR_OBJECT_PATH "_UNITY_OBJECT_PATH"
+
+static GdkAtom _menu_atom;
+static GdkAtom _menu_atom_legacy;
+static gboolean had_init = FALSE;
+
+/**
+ * Initialise the xatoms for the first time
+ */
+static void init_atoms(void)
 {
-        return NULL;
+        if (had_init) {
+                return;
+        }
+        _menu_atom = gdk_atom_intern(MENUBAR_OBJECT_PATH, FALSE);
+        _menu_atom_legacy = gdk_atom_intern(LEGACY_MENUBAR_OBJECT_PATH, FALSE);
+        had_init = TRUE;
 }
 
 /**
- * Return the legacy dbus menu path for a given window.
+ * Do the real work
  */
+static gchar *query_xwindow_internal(gulong xid, GdkAtom *atom)
+{
+        init_atoms();
+        return NULL;
+}
+
+gchar *query_window_menu_object_path(gulong xid)
+{
+        return query_xwindow_internal(xid, &_menu_atom);
+}
+
 gchar *query_window_menu_object_path_legacy(gulong xid)
 {
-        return NULL;
+        return query_xwindow_internal(xid, &_menu_atom_legacy);
 }
 
 /*
