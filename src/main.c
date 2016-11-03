@@ -11,6 +11,16 @@
 
 #include <stdlib.h>
 
+/**
+ * Current unity-gtk-greeter export path
+ */
+#define MENUBAR_OBJECT_PATH "_GTK_MENUBAR_OBJECT_PATH"
+
+/**
+ * Old pre-upstreaming export path
+ */
+#define LEGACY_MENUBAR_OBJECT_PATH "_UNITY_OBJECT_PATH"
+
 int main(int argc, char **argv)
 {
         return EXIT_FAILURE;
